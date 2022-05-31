@@ -7,15 +7,32 @@ const refs = {
 }
 
 
-const items = [
-    { id: 1, text:"молоко", isDone:true },
-    {id:2, text:"хлеб", isDone:false},
-   {id:3, text:"картошка", isDone:true},
-  {id:4, text:"молоко", isDone:false},
+let items = [
+    { id: "1", text:"молоко", isDone:true },
+    {id:"2", text:"хлеб", isDone:false},
+   {id:"3", text:"картошка", isDone:true},
+  {id:"4", text:"молоко", isDone:false},
 
 ];
 
+const createItems = ({ id, text, isDone }) =>{
+   return `<li class="todo-item" data-id="${id}">
+        <label>
+      <input type="checkbox" ${isDone ? "checked" : ""}/>
+      <span>${text}</span>
+    </label>
+    <button>x</button>
+     </li>`
+};
+    
 
+const renderList = (items) => {
+    const list = items.map(createItems).join("");
+    refs.todoList.innerHTML = "";
+  refs.todoList.insertAdjacentHTML("beforeend", list); 
+}
+
+renderList(items);
 
 // const createForm = () => {
 //     const input = document.createElement('input');
@@ -38,39 +55,42 @@ const items = [
 const onFormSubmit = (evt) => {
     evt.preventDefault();
     const inputValue = evt.target.elements.text.value;
-    const newItem = { id: Date.now(), text: inputValue, isDone: false };
+    const newItem = { id: Date.now().toString(), text: inputValue, isDone: false };
     items.push(newItem);
     renderList(items);
     refs.formEl.reset();
-
-    // console.log(inputValue)
 }
-
 
 refs.formEl.addEventListener("submit", onFormSubmit)
 
-const createItems = ({ id, text, isDone }) =>{
-   return `<li class="todo-item" data-id="${id}">
-        <label>
-      <input type="checkbox" ${isDone ? "checked" : ""}/>
-      <span>${text}</span>
-    </label>
-    <button>x</button>
-     </li>`};
-    
 
-
-const renderList = (items) => {
-    const list = items.map(createItems).join("");
-    refs.todoList.innerHTML = "";
-  refs.todoList.insertAdjacentHTML("beforeend", list); 
-}
-
-renderList(items);
-
-const isDoneChange = () => {
+const toggleItem = (id) => {
+    items = items.map(item => item.id === id?{...item, isDone:!item.isDone}:item)
 
 }
+
+const deleteItem = (id) => {
+    items = items.filter(item => item.id !== id);
+}
+
+const handleListClick = (evt) => {
+    if (evt.target === evt.currentTarget) return;
+    const parent = evt.target.closest('li');
+    const { id } = parent.dataset;
+    // console.log(id);
+    if (evt.target.nodeName === "INPUT") {
+        toggleItem(id);
+        renderList(items);
+}
+if (evt.target.nodeName === "BUTTON") {
+        deleteItem(id);
+        renderList(items);
+            // console.log("del");
+
+    }
+}
+
+refs.todoList.addEventListener("click", handleListClick);
 
 
 
