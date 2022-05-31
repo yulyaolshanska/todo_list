@@ -111,5 +111,5 @@ if (evt.target.nodeName === "BUTTON") {
 
 refs.todoList.addEventListener("click", handleListClick);
 
-
+loadData()
 
