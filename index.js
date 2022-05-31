@@ -46,7 +46,7 @@ const renderList = (items) => {
 }
 
 loadData()
-renderList(items);
+saveAndRender(items);
 
 // const createForm = () => {
 //     const input = document.createElement('input');
