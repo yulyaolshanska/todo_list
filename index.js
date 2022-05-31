@@ -16,7 +16,7 @@ const loadData = () => {
 console.log(items)
     } catch (error) {
         console.log(error.message)
-        items = []
+        items = [];
     }
 
 }
@@ -43,7 +43,7 @@ const renderList = (items) => {
   refs.todoList.insertAdjacentHTML("beforeend", list); 
 }
 
-    loadData();
+    // loadData();
 
 renderList(items);
 
