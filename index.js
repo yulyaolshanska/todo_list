@@ -21,11 +21,11 @@ const loadData = () => {
 const saveData = () => {
     localStorage.setItem("todos", JSON.stringify(items));
 }
-const saveAndRender = () => {
-    saveData();
-    renderList(items);
+// const saveAndRender = () => {
+//     saveData();
+//     renderList(items);
 
-}
+// }
 
 
 const createItems = ({ id, text, isDone }) =>{
@@ -46,7 +46,7 @@ const renderList = (items) => {
 }
 
 loadData()
-saveAndRender(items);
+ renderList(items);
 
 // const createForm = () => {
 //     const input = document.createElement('input');
@@ -71,7 +71,8 @@ const onFormSubmit = (evt) => {
     const inputValue = evt.target.elements.text.value;
     const newItem = { id: Date.now().toString(), text: inputValue, isDone: false };
     items.push(newItem);
-    saveAndRender();
+saveData();
+    renderList(items);
     refs.formEl.reset();
 }
 
@@ -92,12 +93,12 @@ const handleListClick = (evt) => {
     const { id } = parent.dataset;
     if (evt.target.nodeName === "INPUT") {
         toggleItem(id);
-        saveAndRender();
-}
+saveData();
+    renderList(items);}
 if (evt.target.nodeName === "BUTTON") {
     deleteItem(id);
-    saveAndRender();
-    }
+saveData();
+    renderList(items);    }
 }
 
 refs.todoList.addEventListener("click", handleListClick);
