@@ -6,14 +6,27 @@ const refs = {
 
 }
 
+let items = [];
 
-let items = [
-    { id: "1", text:"молоко", isDone:true },
-    {id:"2", text:"хлеб", isDone:false},
-   {id:"3", text:"картошка", isDone:true},
-  {id:"4", text:"молоко", isDone:false},
+const loadData = () => {
+    try { 
+    items = JSON.parse(localStorage.getItem("todos"));
+    } catch (error) {
+        console.log(error.message)
+        items = []
+    }
 
-];
+}
+
+const saveData = () => {
+    localStorage.setItem("todos", JSON.stringify(items));
+}
+const saveAndRender = () => {
+    saveData();
+    renderList(items);
+
+}
+
 
 const createItems = ({ id, text, isDone }) =>{
    return `<li class="todo-item" data-id="${id}">
@@ -32,6 +45,7 @@ const renderList = (items) => {
   refs.todoList.insertAdjacentHTML("beforeend", list); 
 }
 
+loadData()
 renderList(items);
 
 // const createForm = () => {
@@ -57,7 +71,7 @@ const onFormSubmit = (evt) => {
     const inputValue = evt.target.elements.text.value;
     const newItem = { id: Date.now().toString(), text: inputValue, isDone: false };
     items.push(newItem);
-    renderList(items);
+    saveAndRender();
     refs.formEl.reset();
 }
 
@@ -65,8 +79,7 @@ refs.formEl.addEventListener("submit", onFormSubmit)
 
 
 const toggleItem = (id) => {
-    items = items.map(item => item.id === id?{...item, isDone:!item.isDone}:item)
-
+    items = items.map(item => item.id === id ? { ...item, isDone: !item.isDone } : item);
 }
 
 const deleteItem = (id) => {
@@ -77,16 +90,13 @@ const handleListClick = (evt) => {
     if (evt.target === evt.currentTarget) return;
     const parent = evt.target.closest('li');
     const { id } = parent.dataset;
-    // console.log(id);
     if (evt.target.nodeName === "INPUT") {
         toggleItem(id);
-        renderList(items);
+        saveAndRender();
 }
 if (evt.target.nodeName === "BUTTON") {
-        deleteItem(id);
-        renderList(items);
-            // console.log("del");
-
+    deleteItem(id);
+    saveAndRender();
     }
 }
 
