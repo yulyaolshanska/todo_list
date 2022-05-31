@@ -9,11 +9,12 @@ const refs = {
 
 const items = [
     { id: 1, text:"молоко", isDone:true },
-    {id:1, text:"хлеб", isDone:false},
-   {id:1, text:"картошка", isDone:true},
-  {id:1, text:"молоко", isDone:false},
+    {id:2, text:"хлеб", isDone:false},
+   {id:3, text:"картошка", isDone:true},
+  {id:4, text:"молоко", isDone:false},
 
 ];
+
 
 
 // const createForm = () => {
@@ -36,24 +37,40 @@ const items = [
 
 const onFormSubmit = (evt) => {
     evt.preventDefault();
+    const inputValue = evt.target.elements.text.value;
+    const newItem = { id: Date.now(), text: inputValue, isDone: false };
+    items.push(newItem);
+    renderList(items);
+    refs.formEl.reset();
+
+    // console.log(inputValue)
 }
 
 
 refs.formEl.addEventListener("submit", onFormSubmit)
 
-const createItems = (items) => {
-    return items.map(({ id, text, isDone }) => {
-       return `<li class="todo-item" data-id="${id}">
+const createItems = ({ id, text, isDone }) =>{
+   return `<li class="todo-item" data-id="${id}">
         <label>
       <input type="checkbox" ${isDone ? "checked" : ""}/>
       <span>${text}</span>
-    </label>`
-    }).join("");
+    </label>
+    <button>x</button>
+     </li>`};
+    
+
+
+const renderList = (items) => {
+    const list = items.map(createItems).join("");
+    refs.todoList.innerHTML = "";
+  refs.todoList.insertAdjacentHTML("beforeend", list); 
+}
+
+renderList(items);
+
+const isDoneChange = () => {
 
 }
-const createList = () => {
-    
-}
-refs.todoList.insertAdjacentHTML("beforeend", createItems(items));
+
 
 
