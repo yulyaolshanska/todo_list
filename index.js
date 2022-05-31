@@ -43,7 +43,7 @@ const renderList = (items) => {
   refs.todoList.insertAdjacentHTML("beforeend", list); 
 }
 
-    // loadData();
+    loadData();
 
 renderList(items);
 
@@ -111,5 +111,5 @@ if (evt.target.nodeName === "BUTTON") {
 
 refs.todoList.addEventListener("click", handleListClick);
 
-loadData()
+// loadData()
 
