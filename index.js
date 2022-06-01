@@ -7,18 +7,20 @@ const refs = {
 }
 
 
-
+const URL = `https://6296541a810c00c1cb73bacd.mockapi.io/todos`
 let items = [];
 
 const loadData = () => {
-    try { 
-    items = JSON.parse(localStorage.getItem("todos"));
-console.log(items)
+    try {
+       
+        items = JSON.parse(localStorage.getItem("todos"));
+        console.log(items)
+        
     } catch (error) {
         console.log(error.message)
         items = [];
     }
-
+    // fetch(URL).then(resp => resp.json()).then(data => items = data).catch(error => console.log(error))
 }
 
 const saveData = () => {
@@ -43,10 +45,7 @@ const renderList = (items) => {
   refs.todoList.insertAdjacentHTML("beforeend", list); 
 }
 
-    loadData();
-
-renderList(items);
-
+   
 // const createForm = () => {
 //     const input = document.createElement('input');
 //     const formBtn = document.createElement('button');
@@ -111,5 +110,8 @@ if (evt.target.nodeName === "BUTTON") {
 
 refs.todoList.addEventListener("click", handleListClick);
 
-// loadData()
+ loadData();
+
+renderList(items);
+
 
