@@ -1,3 +1,4 @@
+import {fetchTodos, createTodo, deleteTodo, updateTodo} from "./src/js/api.js"
 const refs = {
     body: document.querySelector('body'),
     formEl: document.querySelector('#todo-form'),
@@ -6,18 +7,10 @@ const refs = {
     loader: document.querySelector('#loader'),
 
 }
-
-const fetchTodos = () => { }
-const createTodo = () => {}
-const deleteTodo = () => {}
-const updateTodo = () => {}
-
-const URL = `https://6296541a810c00c1cb73bacd.mockapi.io/todos`;
 let items = [];
 
 const loadData = () => {
-    return fetch(URL)
-        .then(resp => resp.json())
+  return  fetchTodos()
         .then(data => items = data)
         .catch(error => console.log(error));
 }
@@ -48,26 +41,36 @@ const hideLoader = () => {
         refs.loader.classList.remove("show");
 
 }
-const createItem = (item) => {
-    const options = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body:JSON.stringify(item),
-}
-    return fetch(URL, options).then(resp => resp.json).catch(error => console.log(error));
-}
+
 
 const toggleItem = (id) => {
-
+   const item = items.find(item => item.id === id)
+      showLoader()
+    return updateTodo(id, {isDone: !item.isDone})
+       .then(() => {
+             items = items.map(item => item.id === id ? { ...item, isDone: !item.isDone } : item);
+            })
+      .then(() => {
+          renderList(items)
+      })
+        .catch(error => console.log(error))
+      .finally(() => {
+        hideLoader()
+    })
  
 }
 
 const deleteItem = (id) => {
-    return fetch(`${URL}/${id}`, {
-        method: "DELETE",
-    }).catch(error => console.log(error))
+    showLoader()
+  return  deleteTodo(id)
+      .then(() => items = items.filter(item => item.id !== id))
+      .then(() => {
+          renderList(items)
+      })
+        .catch(error => console.log(error))
+      .finally(() => {
+        hideLoader()
+    })
 }
 
 const onFormSubmit = (evt) => {
@@ -75,7 +78,7 @@ const onFormSubmit = (evt) => {
     const inputValue = evt.target.elements.text.value;
     const newItem = { text: inputValue, isDone: false };
 showLoader()
-    createItem(newItem).then(() => {
+   createTodo(newItem).then(() => {
     items.push(newItem);
     }).then(() => {
     renderList(items);
@@ -98,16 +101,12 @@ const handleListClick = (evt) => {
     const { id } = parent.dataset;
     if (evt.target.nodeName === "INPUT") {
         toggleItem(id)
-            .then(() => {
-             items = items.map(item => item.id === id ? { ...item, isDone: !item.isDone } : item);
-            })
             .then(() => renderList(items))
             .catch(error => console.log(error))
         
 }
 if (evt.target.nodeName === "BUTTON") {
     deleteItem(id)
-        .then(() => items = items.filter(item => item.id !== id))
         .then(() => renderList(items))
         .catch(error => console.log(error))
     }
