@@ -2,21 +2,20 @@ const refs = {
     body: document.querySelector('body'),
     formEl: document.querySelector('#todo-form'),
     todoList: document.querySelector('#todo-list'),
-  formBtn:document.querySelector(".formBtn")
+    formBtn:document.querySelector(".formBtn")
 
 }
 
 
-const URL = `https://6296541a810c00c1cb73bacd.mockapi.io/todos`
+const URL = `https://6296541a810c00c1cb73bacd.mockapi.io/todos`;
 let items = [];
 
 const loadData = () => {
     try {
-       
-        items = JSON.parse(localStorage.getItem("todos"));
-        console.log(items)
-        
-    } catch (error) {
+        if (localStorage.getItem("todos")) {
+            items = JSON.parse(localStorage.getItem("todos"));
+        }
+    }catch (error){
         console.log(error.message)
         items = [];
     }
@@ -70,7 +69,6 @@ const onFormSubmit = (evt) => {
     const newItem = { id: Date.now().toString(), text: inputValue, isDone: false };
     items.push(newItem);
     saveData();
-// loadData()
     renderList(items);
     refs.formEl.reset();
 }
@@ -91,27 +89,22 @@ const handleListClick = (evt) => {
     if (evt.target === evt.currentTarget) return;
     const parent = evt.target.closest('li');
     const { id } = parent.dataset;
-    // console.log(id);
     if (evt.target.nodeName === "INPUT") {
         toggleItem(id);
         saveData();
-        // loadData()
         renderList(items);
 }
 if (evt.target.nodeName === "BUTTON") {
     deleteItem(id);
     saveData();
-    // loadData()
         renderList(items);
-            // console.log("del");
 
     }
 }
 
 refs.todoList.addEventListener("click", handleListClick);
-
- loadData();
-
+ 
+loadData();
 renderList(items);
 
 
