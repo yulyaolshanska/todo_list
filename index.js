@@ -78,8 +78,8 @@ const onFormSubmit = (evt) => {
     const inputValue = evt.target.elements.text.value;
     const newItem = { text: inputValue, isDone: false };
 showLoader()
-   createTodo(newItem).then(() => {
-    items.push(newItem);
+   createTodo(newItem).then(data => {
+    items.push(data);
     }).then(() => {
     renderList(items);
     }).then(() => {
@@ -101,14 +101,10 @@ const handleListClick = (evt) => {
     const { id } = parent.dataset;
     if (evt.target.nodeName === "INPUT") {
         toggleItem(id)
-            .then(() => renderList(items))
-            .catch(error => console.log(error))
-        
+    
 }
 if (evt.target.nodeName === "BUTTON") {
     deleteItem(id)
-        .then(() => renderList(items))
-        .catch(error => console.log(error))
     }
 }
 
